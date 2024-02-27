@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "./Basic/static/css/main.66392cde.css",
+    "main.js": "./Basic/static/js/main.de66c1e2.js",
+    "static/css/876.5c5a67e5.chunk.css": "./Basic/static/css/876.5c5a67e5.chunk.css",
+    "static/js/876.0358cf7b.chunk.js": "./Basic/static/js/876.0358cf7b.chunk.js",
+    "static/css/253.abbf1fec.chunk.css": "./Basic/static/css/253.abbf1fec.chunk.css",
+    "static/js/253.9ebe133b.chunk.js": "./Basic/static/js/253.9ebe133b.chunk.js",
+    "static/js/27.211fc94a.chunk.js": "./Basic/static/js/27.211fc94a.chunk.js",
+    "static/js/652.08b06da1.chunk.js": "./Basic/static/js/652.08b06da1.chunk.js",
+    "static/media/NotoSansKR-Black.otf": "./Basic/static/media/NotoSansKR-Black.dba005b6b1bed712b472.otf",
+    "static/media/NotoSansKR-Bold.otf": "./Basic/static/media/NotoSansKR-Bold.c252383c4f70753be0e7.otf",
+    "static/media/NotoSansKR-Medium.otf": "./Basic/static/media/NotoSansKR-Medium.56207b5e52841342a21b.otf",
+    "static/media/NotoSansKR-Regular.otf": "./Basic/static/media/NotoSansKR-Regular.e1aa54c04a18648e6468.otf",
+    "static/media/NotoSansKR-Light.otf": "./Basic/static/media/NotoSansKR-Light.636ff9b51e826a733c3d.otf",
+    "static/media/NotoSansKR-Thin.otf": "./Basic/static/media/NotoSansKR-Thin.a3e74b5ef0ed5ab193f5.otf",
+    "static/media/loading.gif": "./Basic/static/media/loading.410eb77d58a3aed7aea1.gif",
+    "index.html": "./Basic/index.html"
+  },
+  "entrypoints": [
+    "static/css/main.66392cde.css",
+    "static/js/main.de66c1e2.js"
+  ]
+}

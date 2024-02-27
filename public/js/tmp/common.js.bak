@@ -1,0 +1,546 @@
+(function ($) {
+    $.fn.ctg_select_box = function (selectID, cnt, url, emptyText) {
+        return this.each(function (index, domEle) {
+            $(this).change(function (event) {
+                var thisID = event.currentTarget.id; // #ctgCode1    // 변경되는 select의 ID값
+                var selectPanel =
+                parseInt(thisID.substr(selectID.length - 1, 1)) + 1; // 2            // 변경되는 select의 다음 select의 ID번호
+                var targetID = selectID + selectPanel; // #ctgCode2    // 변경할 select의 ID값
+                var code = $(this).val();
+                code = Array.isArray(code) ? code[0] : code; // select가 multiple인 경우, 배열이 넘어올 수 있음
+                var parameters = { depth: selectPanel, upper: code };
+                var tmpID = "";
+
+                $(selectID).val(code);
+                if (typeof changeData == "function") changeData(code);
+
+                postCallback = function (data) {
+                    if (emptyText != "" && emptyText != null) {
+                        for (var i = selectPanel; i <= cnt; i++) {
+                            tmpID = selectID + i;
+                            $(tmpID).html(
+                                '<option value="">' + emptyText + "</option>"
+                            );
+                        }
+                    }
+                    data = eval(data);
+                    if (data != "" && data != null) {
+                        $(targetID).html("");
+                        var k = 1;
+                        for (var j = 0; j < data.length; j++) {
+                            if (
+                                j == 0 &&
+                                emptyText != "" &&
+                                emptyText != null
+                            ) {
+                                $(targetID)
+                                .get(0)
+                                .add(
+                                    new Option(emptyText, ""),
+                                    document.all ? j : null
+                                );
+                            }
+                            k = k + j;
+
+                            $("<option/>", {
+                                text: data[j]["optionText"],
+                                value: data[j]["optionValue"],
+                                data: {
+                                    flag: data[j]["flag"],
+                                    mallName: data[j]["mallName"],
+                                },
+                            }).appendTo(targetID);
+                        }
+                    }
+                };
+                if (url) {
+                    $.post(url, parameters, postCallback);
+                }
+            });
+        });
+    };
+})(jQuery);
+
+// 날짜검색
+function searchDate(fr_date, to_date, today) {
+    if (today == "오늘") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+        var mydate = new Date();
+        mydate.setDate(mydate.getDate());
+
+        obj1.value = formatDate(mydate);
+        if (obj2 != null) {
+            obj2.value = obj1.value;
+        }
+    } else if (today == "어제") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+        var mydate = new Date();
+        mydate.setDate(mydate.getDate() - 1);
+
+        obj1.value = formatDate(mydate);
+        if (obj2 != null) {
+            obj2.value = obj1.value;
+        }
+    } else if (today == "이번주") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+
+        var now = new Date();
+        var nowDayOfWeek = now.getDay();
+        var nowDay = now.getDate();
+        var nowMonth = now.getMonth();
+        var nowYear = now.getYear();
+        nowYear += nowYear < 2000 ? 1900 : 0;
+        var weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek);
+        var weekEndDate = new Date(
+            nowYear,
+            nowMonth,
+            nowDay + (6 - nowDayOfWeek)
+        );
+
+        obj1.value = formatDate(weekStartDate);
+        obj2.value = formatDate(weekEndDate);
+    } else if (today == "이번달") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+
+        var now = new Date();
+        var nowDayOfWeek = now.getDay();
+        var nowDay = now.getDate();
+        var nowMonth = now.getMonth();
+        var nowYear = now.getYear();
+        nowYear += nowYear < 2000 ? 1900 : 0;
+
+        var monthStarDate = new Date(nowYear, nowMonth, nowDay - nowDay + 1);
+        var monthEndDate = new Date(nowYear, nowMonth, nowDay);
+
+        obj1.value = formatDate(monthStarDate);
+        obj2.value = formatDate(monthEndDate);
+    } else if (today == "일주일") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+        var mydate = new Date();
+
+        mydate.setDate(mydate.getDate() - 7);
+        obj1.value = formatDate(mydate);
+        obj2.value = formatDate(new Date());
+    } else if (today == "1개월") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+        var mydate = new Date();
+        mydate.setDate(mydate.getDate() - 30);
+
+        obj1.value = formatDate(mydate);
+        obj2.value = formatDate(new Date());
+    } else if (today == "2개월") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+        var mydate = new Date();
+        mydate.setDate(mydate.getDate() - 60);
+
+        obj1.value = formatDate(mydate);
+        obj2.value = formatDate(new Date());
+    } else if (today == "3개월") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+
+        var mydate = new Date();
+        mydate.setDate(mydate.getDate() - 90);
+
+        obj1.value = formatDate(mydate);
+        obj2.value = formatDate(new Date());
+    } else if (today == "이번달") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+
+        var d2, d3;
+        var now = new Date();
+        var nowYear = now.getYear();
+        nowYear += nowYear < 2000 ? 1900 : 0;
+
+        d2 = new Date(nowYear, now.getMonth());
+        d3 = new Date(nowYear, now.getMonth() + 1, "");
+
+        obj1.value = formatDate(d2);
+        obj2.value = formatDate(d3);
+    } else if (today == "지난달") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+
+        var d2, d3;
+        var now = new Date();
+        var nowYear = now.getYear();
+        nowYear += nowYear < 2000 ? 1900 : 0;
+
+        d2 = new Date(nowYear, now.getMonth() - 1);
+        d3 = new Date(nowYear, now.getMonth(), "");
+
+        obj1.value = formatDate(d2);
+        obj2.value = formatDate(d3);
+    } else if (today == "6개월") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+
+        var mydate = new Date();
+        mydate.setDate(mydate.getDate() - 180);
+
+        obj1.value = formatDate(mydate);
+        obj2.value = formatDate(new Date());
+    } else if (today == "전체") {
+        var obj1 = document.getElementById(fr_date);
+        var obj2 = document.getElementById(to_date);
+        obj1.value = "";
+        obj2.value = "";
+    }
+}
+
+
+$(function() {
+    console.log( "ready!!!" );
+
+    checking_showYn = function(){
+        if ($("input:checkbox[name=showYnChk]").is(":checked")) {
+            $("#showYn").val("y");
+        } else {
+            $("#showYn").val("n");
+        }
+    };
+
+    checking_useYn = function(){
+        if ($("input:checkbox[name=useYnChk]").is(":checked")) {
+            $("#useYn").val("y");
+        } else {
+            $("#useYn").val("n");
+        }
+    };
+
+    checking_state = function(){
+        if ($("input:checkbox[name=stateChk]").is(":checked")) {
+            $("#state").val("2");
+        } else {
+            $("#state").val("1");
+        }
+    };
+
+    $(".chead01_wrap table").colResizable({
+         liveDrag:true,
+        resizeMode:'overflow'
+    } );
+
+
+    // 검색폼 초기화
+    $("#freset").on("click", function () {
+        $("input", "#fsearch")
+        .not(":submit, :reset, :hidden, :button")
+        .val("")
+        .removeAttr("checked")
+        .removeAttr("selected");
+    });
+
+
+    /*
+    $("#fexcel").on("click", function () {
+    var idx = "";
+    var chk_list = new Array();
+    var $el_chk = $("input[name='chk[]']");
+
+    $el_chk.each(function (index) {
+    if ($(this).is(":checked")) {
+    chk_list.push($("input[name='idxl[" + index + "]']").val());
+    }
+    });
+
+    if (chk_list.length > 0) {
+    idx = chk_list.join();
+    }
+
+    if (idx == "") {
+    d_msg("알림","처리할 자료를 하나 이상 선택해 주십시오.","alert");
+    return false;
+    } else {
+    var table = $(this).attr("data-file");
+    //this.href = "/Excel/"+table+"/"+idx;
+    this.href = table + "/" + idx;
+    return true;
+    }
+    });
+    */
+
+    $(".list_update").on("click", function () {
+        var page = $(this).attr('id');
+        var tab = $(this).attr("data-tab");
+        var type = $(this).attr('data-type');
+        var idl = "";
+        var chk_list = new Array();
+        var $chk = $("input[name='chk[]']");
+
+        $chk.each(function (index) {
+            if ($(this).is(":checked")) {
+                chk_list.push($("input[name='idl[" + index + "]']").val());
+            }
+        });
+
+        if (chk_list.length > 0) {
+            idl = chk_list.join();
+        }
+        if (idl == "") {
+            alert("처리할 자료를 하나 이상 선택해 주십시오.");
+            return false;
+        } else {
+            if( type == "popup" ){
+                winOpen("/"+tab+"/"+page+"/"+idl,'','900','600','yes');
+            }else{
+                this.href = "/"+tab+"/"+page+"/"+idl;
+            }
+            return true;
+        }
+   });
+
+
+    $('#sort_table th').each(function (column) {
+        $(this).click(function() {
+            if($(this).is('.asc')) {
+                $(this).removeClass('asc');
+                $(this).addClass('desc');
+                sortdir = -1;
+            } else {
+                $(this).addClass('asc');
+                $(this).removeClass('desc');
+                sortdir = 1;
+            }
+            $(this).siblings().removeClass('asc');
+            $(this).siblings().removeClass('desc');
+
+            var rec = $('#sort_table').find('tbody>tr').get();
+            if( $(this).is('.nsort') ){
+                rec.sort(function (a, b) {
+                    var var1 = $(a).children('td').eq(column).text().toUpperCase();
+                    var1 = var1.replace(/[^0-9]/g,'');
+                    var1 = parseInt(var1);
+                    var var2 = $(b).children('td').eq(column).text().toUpperCase();
+                    var2 = var2.replace(/[^0-9]/g,'');
+                    var2 = parseInt(var2);
+                    return (var1 < var2)? -sortdir : (var1>var2) ? sortdir : 0;
+                });
+            }else{
+                rec.sort(function (a, b) {
+                    var var1 = $(a).children('td').eq(column).text().toUpperCase();
+                    var var2 = $(b).children('td').eq(column).text().toUpperCase();
+                    return (var1 < var2)? -sortdir : (var1>var2) ? sortdir : 0;
+                });
+            }
+
+            $.each(rec, function(index, row) {
+                $('#sort_table tbody').append(row);
+            });
+        });
+    });
+
+    /** ---- editor setting ---- **/
+    var editor_box = {};
+    // connect editors to textareas
+    $('.s_editor').each(function (idx,obj) {
+        const editor_id = obj.getAttribute('id');
+        editor_box[editor_id] = [];
+        nhn.husky.EZCreator.createInIFrame({
+            oAppRef: editor_box[editor_id], //editors in editor_box
+            elPlaceHolder: editor_id, //textare id
+            sSkinURI: "/public/js/plugin/editor/smarteditor2/SmartEditor2Skin.html",
+            fCreator: "createSEditor2",
+            htParams : {
+                bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+                bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+                bUseModeChanger : true,			// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+                //aAdditionalFontList : aAdditionalFontSet,		// 추가 글꼴 목록
+                fOnBeforeUnload : function(){
+                    //alert("완료!");
+                }
+            }, //boolean
+            fOnAppLoad : function(){
+                //예제 코드
+                //oEditors.getById["ir1"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text입니다."]);
+            },            
+        });        
+    });
+    
+    // push contents into textareas before submission
+    $('#btn_submit').click(function(){
+        if($('.s_editor')){
+            $('.s_editor').each(function (idx,obj) {
+                const editor_id = obj.getAttribute('id');
+                editor_box[editor_id].getById[editor_id].exec("UPDATE_CONTENTS_FIELD", []);
+            });
+        }
+    });     
+
+/*
+    (function($){
+        $(document).ready(function() {
+            $(".smarteditor2").each( function(index){
+                var get_id = $(this).attr("id");
+                if( !get_id || $(this).prop("nodeName") != 'TEXTAREA' ) return true;
+    
+                nhn.husky.EZCreator.createInIFrame({
+                    oAppRef: oEditors,
+                    elPlaceHolder: get_id,
+                    sSkinURI: tw_editor_url+"/SmartEditor2Skin.html",	
+                    htParams : {
+                        bUseToolbar : true,				// 툴바 사용 여부 (true:사용/ false:사용하지 않음)
+                        bUseVerticalResizer : true,		// 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
+                        bUseModeChanger : true,			// 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
+                        //aAdditionalFontList : aAdditionalFontSet,		// 추가 글꼴 목록
+                        fOnBeforeUnload : function(){
+                            //alert("완료!");
+                        }
+                    }, //boolean
+                    fOnAppLoad : function(){
+                        //예제 코드
+                        //oEditors.getById["ir1"].exec("PASTE_HTML", ["로딩이 완료된 후에 본문에 삽입되는 text입니다."]);
+                    },
+                    fCreator: "createSEditor2"
+                });
+            });
+        });
+    })(jQuery);
+    */
+    
+
+});
+
+
+// 팝업 중앙에 띄우기
+function winOpen(url, name, w, h, scroll){
+    var pwin = null;
+    LeftPosition = (screen.width) ? (screen.width-w)/2 : 0;
+    TopPosition = (screen.height) ? (screen.height-h)/2 : 0;
+    settings = 'height='+h+',width='+w+',top='+TopPosition+',left='+LeftPosition+',scrollbars='+scroll+',resizable=no';
+    pwin = window.open(url, name, settings)
+}
+
+// 5자리 우편번호 도로명 우편번호 창
+function winZip(frm_name, frm_zip, frm_addr1, frm_addr2, frm_addr3 )
+{
+    var url = "/Popup/kakaoAddr?frm_name="+frm_name+"&frm_zip="+frm_zip+"&frm_addr1="+frm_addr1+"&frm_addr2="+frm_addr2+"&frm_addr3="+frm_addr3;
+    winOpen(url, "winZip", "483", "600", "yes");
+
+}
+
+function comma(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
+}
+
+function uncomma(str) {
+    str = String(str);
+    return str.replace(/[^\d]+/g, '');
+} 
+
+function onlynumber(str) {
+    str = String(str);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g,'$1');
+}
+
+function inputNumberFormat(obj) {
+    obj.value = comma(uncomma(obj.value));
+}
+
+function inputOnlyNumberFormat(obj) {
+    obj.value = onlynumber(uncomma(obj.value));
+}
+
+
+
+// 날짜계산
+function formatDate(date) {
+    var mymonth = date.getMonth() + 1;
+    var myweekday = date.getDate();
+    return (
+        date.getFullYear() +
+            "-" +
+            (mymonth < 10 ? "0" : "") +
+            mymonth +
+            "-" +
+            (myweekday < 10 ? "0" : "") +
+            myweekday
+    );
+}
+
+
+
+function checkAll(f) {
+    console.log("check_all");
+    var chk = document.getElementsByName("chk[]");
+    for (i = 0; i < chk.length; i++) chk[i].checked = f.chkall.checked;
+}
+/*
+function frmSearch() {
+var srch = $("#srch").val();
+var kwd = $("#kwd").val();
+$("#search").val(srch + "=" + kwd);
+}
+*/
+
+function d_msg(title, content, mod='confirm'){
+    return new Promise((resolve) => {
+        const chk_span = document.getElementById('dialog-span');	
+        if(!chk_span){
+            const d_div = document.createElement('div');
+            const d_p = document.createElement('p');
+            const d_span = document.createElement('span');
+            d_div.setAttribute("id","dialog-confirm");
+            d_div.setAttribute("title",title);
+            d_span.setAttribute("id","dialog-span")
+            d_span.innerHTML = content;
+            d_p.appendChild(d_span);
+            d_div.appendChild(d_p);
+            document.body.appendChild(d_div);
+        }else{
+            chk_span.innerHTML = content;
+        }
+
+        const option = {
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "확인": function(){
+                    $( this ).dialog( "close" );
+                    $( this ).remove();
+                    resolve(true);
+                },
+                "취소": function(){
+                    $( this ).dialog( "close" );
+                    $( this ).remove();
+                    resolve(false);
+                },                
+            }
+        }
+
+        if(mod=='alert') delete option.buttons["취소"];
+        $( "#dialog-confirm" ).dialog(option); 
+    });
+}
+
+//모달창으로 결과 알람 받는 페이지 초기 실행 함수
+function respond_alert(target, origin_url){
+    const now_url = new URL(window.location.href);
+    const urlParams = now_url.searchParams;
+    const act = urlParams.get('act');
+    const res = urlParams.get('res');
+    if(act && res){
+        let act_word = '';
+        if(act == 'u'){
+            act_word = '수정';
+        }else if(act == 'r'){
+            act_word = '등록';
+        }else if(act == 'd'){
+            act_word = '삭제';
+        }
+        let result_word = res == 's' ? '성공' : '실패';            
+        d_msg('알람',`${target} ${act_word}에 ${result_word}하였습니다.`, mod='alert');
+    }
+    history.pushState(null, null, origin_url);
+}

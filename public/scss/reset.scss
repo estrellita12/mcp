@@ -1,0 +1,415 @@
+/*  font  */
+/*
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:100; src:url('../font/S-Core_Dream_OTF/SCDream1.otf') format('opentype'); }
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:200; src:url('../font/S-Core_Dream_OTF/SCDream2.otf') format('opentype'); }
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:300; src:url('../font/S-Core_Dream_OTF/SCDream3.otf') format('opentype'); }
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:400; src:url('../font/S-Core_Dream_OTF/SCDream4.otf') format('opentype'); }
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:500; src:url('../font/S-Core_Dream_OTF/SCDream5.otf') format('opentype'); }
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:600; src:url('../font/S-Core_Dream_OTF/SCDream6.otf') format('opentype'); }
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:700; src:url('../font/S-Core_Dream_OTF/SCDream7.otf') format('opentype'); }
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:800; src:url('../font/S-Core_Dream_OTF/SCDream8.otf') format('opentype'); }
+@font-face{ font-family:'S-Core_Dream'; font-style:normal; font-weight:900; src:url('../font/S-Core_Dream_OTF/SCDream9.otf') format('opentype'); }
+ */
+
+@font-face {
+    font-family: "NotoSansKR";
+    font-weight: 200;
+    src: url("../font/NotoSansKR-Thin.otf") format("opentype");
+}
+@font-face {
+    font-family: "NotoSansKR";
+    font-weight: 300;
+    src: url("../font/NotoSansKR-Light.otf") format("opentype");
+}
+@font-face {
+    font-family: "NotoSansKR";
+    font-weight: 400;
+    src: url("../font/NotoSansKR-Regular.otf") format("opentype");
+}
+@font-face {
+    font-family: "NotoSansKR";
+    font-weight: 500;
+    src: url("../font/NotoSansKR-Medium.otf") format("opentype");
+}
+@font-face {
+    font-family: "NotoSansKR";
+    font-weight: 600;
+    src: url("../font/NotoSansKR-Bold.otf") format("opentype");
+}
+@font-face {
+    font-family: "NotoSansKR";
+    font-weight: 700;
+    src: url("../font/NotoSansKR-Black.otf") format("opentype");
+}
+
+/* 기본 스타일을 없애는 기본 스타일 시트 */
+html {
+    overflow-y: scroll;
+}
+html,
+body {
+}
+body {
+    font-family: "NotoSansKR", "Noto Sans Korean", "맑은 고딕", "Malgun Gothic",
+        sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+}
+body * {
+    font-family: "NotoSansKR", "Noto Sans Korean", "맑은 고딕", "Malgun Gothic",
+        sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+article,
+aside,
+footer,
+header,
+nav,
+section {
+    display: block;
+}
+img,
+table,
+thead,
+tfoot,
+iframe {
+    border: none;
+}
+label,
+input,
+button,
+textarea,
+select,
+img {
+    vertical-align: middle;
+}
+b,
+strong {
+    font-weight: 500;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+}
+input,
+textarea {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    background: none;
+    background: #ffffff;
+}
+ul li {
+    list-style: none;
+}
+ol li {
+    list-style: none;
+}
+
+.sound_only {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 0;
+    line-height: 0;
+    border: 0;
+    overflow: hidden;
+}
+
+.dn {
+    display: none;
+}
+.inline {
+    display: inline-block;
+}
+
+.fr {
+    float: right !important;
+}
+.fl {
+    float: left !important;
+}
+
+.ta {
+    &r {
+        text-align: right !important;
+    }
+    &c {
+        text-align: center !important;
+    }
+    &l {
+        text-align: left !important;
+    }
+}
+
+@for $i from 1 to 41 {
+    .w#{$i*10} {
+        width: $i * 10px;
+    }
+}
+
+/*테이블 그리드*/
+.w {
+    &10p {
+        width: 10%;
+    }
+    &15p {
+        width: 15%;
+    }
+    &20p {
+        width: 20%;
+    }
+    &25p {
+        width: 25%;
+    }
+    &50p {
+        width: 50%;
+    }
+    &100p {
+        width: 100%;
+    }
+}
+
+@for $i from 1 to 10 {
+    .mart#{$i} {
+        margin-top: $i * 1px;
+    }
+}
+@for $i from 1 to 10 {
+    .mart#{$i*10} {
+        margin-top: $i * 10px;
+    }
+}
+
+@for $i from 1 to 10 {
+    .marb#{$i} {
+        margin-bottom: $i * 1px;
+    }
+}
+@for $i from 1 to 10 {
+    .marb#{$i*10} {
+        margin-bottom: $i * 10px;
+    }
+}
+
+@for $i from 1 to 10 {
+    .marl#{$i} {
+        margin-left: $i * 1px;
+    }
+}
+@for $i from 1 to 10 {
+    .marl#{$i*10} {
+        margin-left: $i * 10px;
+    }
+}
+
+@for $i from 1 to 10 {
+    .marr#{$i} {
+        margin-right: $i * 1px;
+    }
+}
+@for $i from 1 to 10 {
+    .marr#{$i*10} {
+        margin-right: $i * 10px;
+    }
+}
+
+@for $i from 1 to 10 {
+    .padt#{$i} {
+        padding-top: $i * 1px;
+    }
+}
+@for $i from 1 to 10 {
+    .padt#{$i*10} {
+        padding-top: $i * 10px;
+    }
+}
+
+@for $i from 1 to 10 {
+    .padb#{$i} {
+        padding-bottom: $i * 1px;
+    }
+}
+@for $i from 1 to 10 {
+    .padb#{$i*10} {
+        padding-bottom: $i * 10px;
+    }
+}
+
+@for $i from 1 to 10 {
+    .padl#{$i} {
+        padding-left: $i * 1px;
+    }
+}
+@for $i from 1 to 10 {
+    .padl#{$i*10} {
+        padding-left: $i * 10px;
+    }
+}
+
+@for $i from 1 to 10 {
+    .padr#{$i} {
+        padding-right: $i * 1px;
+    }
+}
+@for $i from 1 to 10 {
+    .padr#{$i*10} {
+        padding-right: $i * 10px;
+    }
+}
+
+.fs {
+    &_7 {
+        font-size: 7px;
+    }
+    &_8 {
+        font-size: 8px;
+    }
+    &_9 {
+        font-size: 9px;
+    }
+    &_10 {
+        font-size: 10px;
+    }
+    &_11 {
+        font-size: 11px;
+    }
+    &_12 {
+        font-size: 12px;
+    }
+    &_13 {
+        font-size: 13px;
+    }
+}
+
+.tx {
+    &_ul {
+        text-decoration: underline;
+    }
+    &_ol {
+        text-decoration: overline;
+    }
+    &_lt {
+        text-decoration: line-through;
+    }
+    &_nn {
+        text-decoration: none;
+    }
+}
+
+.fw {
+    &_300 {
+        font-weight: 300 !important;
+    }
+    &_400 {
+        font-weight: 400 !important;
+    }
+    &_500 {
+        font-weight: 500 !important;
+    }
+    &_600 {
+        font-weight: 600 !important;
+    }
+    &_700 {
+        font-weight: 700 !important;
+    }
+}
+
+.fixed-clear {
+    &:after {
+        display: block;
+        visibility: hidden;
+        clear: both;
+        content: "";
+    }
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.vat {
+    vertical-align: top !important;
+}
+
+.ofxh {
+    overflow-x: hidden !important;
+}
+.dot {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.readonly {
+    background-color: #eee !important;
+    color: #666 !important;
+}
+
+.frm_input {
+    height: 28px;
+    padding: 2px 5px 2px 2px;
+    border: 1px solid #eee;
+    font-size: 14px;
+}
+label {
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+input {
+    &[type="text"],
+    &[type="number"],
+    &[type="file"],
+    &[type="password"],
+    &[type="date"],
+    &[type="time"] {
+        @extend .frm_input;
+    }
+}
+
+input {
+    &[type="checkbox"],
+    &[type="radio"] {
+        margin-right: 3px;
+    }
+}
+
+input:disabled {
+    background-color: #ddd;
+    color: #efefef;
+}
+input:read-only {
+    background-color: #eee;
+    color: #666;
+}
+
+input:required,
+.required {
+    background-image: url(../img/wrest.gif);
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+
+input::placeholder {
+    color: #ddd;
+}
+
+select {
+    @extend .frm_input;
+}
+textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+}

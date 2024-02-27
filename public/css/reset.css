@@ -1,0 +1,61 @@
+@charset "UTF-8";
+/* 기본 스타일을 없애는 기본 스타일 시트 */
+html {
+  overflow-y: scroll;
+}
+
+html, body {
+  height: 100%;
+}
+
+html, body, div, p, h1, h2, h3, h4, h5, h6,
+ul, ol, li, dl, dt, dd, table, th, td, pre, blockquote, thead, tfoot,
+form, fieldset, legend, input, textarea, button, select {
+  margin: 0;
+  padding: 0;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+img, table, thead, tfoot, fieldset, legend, iframe {
+  border: none;
+}
+
+label, input, button, textarea, select, img {
+  vertical-align: middle;
+}
+
+input, textarea {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+  background: none;
+}
+
+ul li {
+  list-style: none;
+}
+
+ol li {
+  list-style: none;
+}
+
+legend {
+  position: absolute;
+  width: 0;
+  height: 0;
+  font-size: 0;
+  line-height: 0;
+  text-indent: -9999em;
+  overflow: hidden;
+}
+
+button {
+  background-color: transparent;
+}
+
+/*# sourceMappingURL=reset.css.map */

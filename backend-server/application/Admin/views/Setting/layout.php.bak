@@ -1,0 +1,268 @@
+<section class="cont_inner">
+    <h1 class="pg_tit"><?=$this->tabInfo['name']?></h1>
+    <form action="/Setting/setLayout" method="POST" onsubmit="return frmExample()">
+        <div class="chead02_wrap">
+            <div class="h2">쇼핑몰 GNB 관리</div>
+            <table>
+                <colgroup>
+                    <col class="w200">
+                    <col class="w200">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">기본 메뉴</th>
+                        <th scope="col">GNB 설정 메뉴</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="vat" rowspan="2">
+                            <table>
+                                <colgroup>
+                                    <col class="w150">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="bg_light_yellow">제목</th>
+                                        <th scope="col" class="bg_light_yellow">URL</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="gnb_sortable_example" class="example_print gnb">
+                                    <?php for($i=1;$i<=9;$i++){ ?>
+                                    <?php if( in_array( $this->row['shop_default_menu']["menu_{$i}_url"] , $this->row['shop_gnb'] ) ) continue; ?>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="gnbTitle[]" value="<?=stripslashes($this->row['shop_default_menu']["menu_{$i}_title"])?>"  class="w100p">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="gnbUrl[]" value="<?=$this->row['shop_default_menu']["menu_{$i}_url"]?>" class="w100p" readonly>
+                                        </td>
+                                    </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td class="vat">
+                            <table>
+                                <colgroup>
+                                    <col class="w150">
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="bg_light_yellow">제목</th>
+                                        <th scope="col" class="bg_light_yellow">URL</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="gnb_sortable" class="gnb" style="height:50px;">
+                                    <?php foreach($this->row['shop_gnb'] as $gnb){ ?>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="gnbTitle[]" value="<?=stripslashes($gnb['title'])?>" class="w100p">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="gnbUrl[]" value="<?=$gnb['url']?>"  class="w100p">
+                                        </td>
+                                    </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td class="tac"> <button type="button" onclick="gnbAdd()" class="btn btn_ssmall btn_red">추가</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="chead02_wrap">
+            <div class="h2">쇼핑몰 메인 레이아웃 관리</div>
+            <p class="info"> 타입 ( 1 : 정적 리스트, 2 : 동적 리스트 ) <br>디자인 ( 1 : 가로, 2: 세로 ) </p>
+            <table>
+                <colgroup>
+                    <col class="w200">
+                    <col class="w200">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col">기본 메뉴</th>
+                        <th scope="col">메인 레이아웃 설정</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="vat" rowspan="2">
+                            <table>
+                                <colgroup>
+                                    <col class="w150">
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="bg_light_yellow">제목</th>
+                                        <th scope="col" class="bg_light_yellow">URL</th>
+                                        <th scope="col" class="bg_light_yellow">타입</th>
+                                        <th scope="col" class="bg_light_yellow">정적</th>
+                                        <th scope="col" class="bg_light_yellow">디자인</th>
+                                        <th scope="col" class="bg_light_yellow">갯수</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody id="main_sortable_example" class="example_print main_layout">
+                                    <?php for($i=1;$i<=9;$i++){ ?>
+                                    <?php if( in_array( $this->row['shop_default_menu']["menu_{$i}_url"] , $this->row['shop_main_layout'] ) ) continue; ?>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="mainLayoutTitle[]" value="<?=stripslashes($this->row['shop_default_menu']["menu_{$i}_title"])?>"  class="w100p">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="mainLayoutUrl[]" value="<?=$this->row['shop_default_menu']["menu_{$i}_url"]?>"  class="w100p">
+                                        </td>
+                                        <td>
+                                            <select name="apiUrl[]" class="w100p" onchange="apiTypeList(this)">
+                                                <option value="/goods">상품</option>
+                                                <option value="/banner">배너</option>
+                                                <option value="/plan">기획전</option>
+                                                <option value="/media">미디어</option>
+                                                <option value="/board">게시판</option>
+                                            </select>
+                                            <select name="apiUrl2[]" class="w100p" class="api-type-list">
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select name="mainLayoutType[]" class="w100p">
+                                                <option value="1">고정 레이아웃</option>
+                                                <option value="2">스와이프 레이아웃</option>
+                                            </select>
+
+                                        </td>
+                                        <td>
+                                            <select name="mainLayoutDesign[]" class="w100p">
+                                                <option value="1">이미지형</option>
+                                                <option value="2">이미지+타이틀형</option>
+                                                <option value="3">이미지+타이틀+상품형</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="mainLayoutCnt[]" value="4"  class="w100p">
+                                        </td>
+                                    </tr>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="vat">
+                        <table>
+                            <colgroup>
+                                <col class="w150">
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="bg_light_yellow">제목</th>
+                                    <th scope="col" class="bg_light_yellow">URL</th>
+                                    <th scope="col" class="bg_light_yellow">타입</th>
+                                    <th scope="col" class="bg_light_yellow">정적</th>
+                                    <th scope="col" class="bg_light_yellow">디자인</th>
+                                    <th scope="col" class="bg_light_yellow">갯수</th>
+                                </tr>
+                            </thead>
+                            <tbody id="main_sortable" class="main_layout" style="height:50px;">
+                                <?php foreach($this->row['shop_main_layout'] as $mainLayout){ ?>
+                                <tr>
+                                    <td>
+                                        <input type="text" name="mainLayoutTitle[]" value="<?=stripslashes($mainLayout['title'])?>"  class="w100p">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="mainLayoutUrl[]" value="<?=$mainLayout['url']?>"  class="w100p">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="mainLayoutApiUrl[]" value="<?=$mainLayout['apiUrl']?>" class="w100p">
+                                    </td>
+                                    <td>
+                                        <input type="text" name="mainLayoutType[]" value="<?=$mainLayout['type']?>"  class="w100p">
+                                    </td>
+                                    <td>
+                                            <select name="mainLayoutDesign[]" class="w100p">
+                                                <?php echo get_frm_option("1",$mainLayout['design'],"이미지형")?>
+                                                <?php echo get_frm_option("2",$mainLayout['design'],"이미지+타이틀형")?>
+                                                <?php echo get_frm_option("3",$mainLayout['design'],"이미지+타이틀+상품형")?>
+                                            </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="mainLayoutCnt[]" value="<?=$mainLayout['cnt']?>"  class="w100p">
+                                    </td>
+                                </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </td>
+                    <tr>
+                        <!--  <td class="tac"> <button type="button" onclick="mainLayoutAdd()" class="btn btn_ssmall btn_red">추가</button></td> -->
+                    </tr>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="confirm_wrap">
+        <input type="submit" value="저장" id="btn_submit" class="btn btn_large btn_black" accesskey="s">
+    </div>
+</form>
+</section>
+<script>
+    $(function(){
+        $( "#gnb_sortable_example, #gnb_sortable" ).sortable({
+            connectWith: ".gnb"
+        }).disableSelection();
+        $( "#main_sortable_example, #main_sortable" ).sortable({
+            connectWith: ".main_layout"
+        }).disableSelection();
+    });
+
+    function apiTypeList(obj){
+        var str = "";
+        var val = $(obj).val();
+        if(val=="/goods"){
+            str += "<option value='?col=orderSum'>인기상품</option>"
+            str += "<option value='?col=regDate'>신상품</option>"
+        }
+        $(obj).next().html(str);
+    }
+
+    function frmExample(){
+        $(".example_print input").attr("disabled","disabled");
+    }
+
+    function gnbAdd(){
+        var str = "<tr>";
+            str += "<td><input type=\"text\" name=\"gnbTitle[]\" placeholder=\"이름\" class=\"w100p\"></td>";
+            str += "<td><input type=\"text\" name=\"gnbUrl[]\" placeholder=\"연결 링크 주소\" class=\"w100p\"></td>";
+            str += "</tr>";
+        $("#gnb_sortable").append(str);
+    }
+
+    function mainLayoutAdd(){
+        var str = "<tr>";
+            str += "<td><input type=\"text\" name=\"mainLayoutTitle[]\" placeholder=\"이름\" class=\"w100p\"></td>";
+            str += "<td><input type=\"text\" name=\"mainLayoutUrl[]\" placeholder=\"연결 링크 주소\" class=\"w100p\"></td>";
+            str += "<td><input type=\"text\" name=\"mainLayoutApiUrl[]\" placeholder=\"연결 링크 주소\" class=\"w100p\"></td>";
+            str += "<td><input type=\"text\" name=\"mainLayoutComponent[]\" placeholder=\"디자인 타입(1:글자,2:이미지형,3:이미지 Swiper형,4:상품 Swiper형, 5:스페셜형)\" class=\"w100p\"></td>";
+            str += "</tr>";
+        $("#main_sortable").append(str);
+    }
+
+</script>
+

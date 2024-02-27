@@ -1,0 +1,50 @@
+<?php
+namespace application\Admin\controllers;
+
+class MainController extends Controller{
+    public function init(){
+       // echo "test";
+    }
+
+    public function index(){
+        $this->header = 'header';
+
+        $this->mainList = array();
+        $this->orderList = array();
+        $this->cancelList = array();
+        $date = date("Y-m-d")." 00:00:00";
+
+        $this->order = new \application\models\OrderModel();
+        $this->member = new \application\models\MemberModel();
+        $this->analysis = new \application\models\AnalysisModel();
+
+        if( empty($_REQUEST['beg']) ) $_REQUEST['beg'] = _DATE_YMD_OD;
+        if( empty($_REQUEST['end']) ) $_REQUEST['end'] = _DATE_YMD;
+        $_REQUEST['state'] = $GLOBALS['od_stt_type']['주문'];
+        $col = "dc_dt, sum(od_amount=0,od_amount,'0') as od_amount ";
+        $this->rowAll = $this->analysis->getAnalysis($col,"web_order","od_dt");
+print_r($this->rowAll);
+ 
+
+        $search = array();
+        $search["od_dt_then_ge"] = $date;
+        $search["od_stt_then_ne"] = "0";
+        $col = " count(distinct od_id) as orderCnt";
+        $col .= ", count( if(od_stt = 1,1,null) ) as vbankCnt";
+        $col .= ", count( if(od_stt = 2,1,null) ) as payCnt";
+        $col .= ", count( if(od_stt = 10,1,null) ) as readyCnt";
+        $col .= ", count( if(od_stt = 11,1,null) ) as deliveryCnt";
+        $col .= ", count( if(od_stt = 21 or od_stt = 22,1,null) ) as changeCnt";
+        $col .= ", count( if(od_stt = 31 or od_stt = 32,1,null) ) as returnCnt";
+        $col .= ", count( if(od_stt = 41 or od_stt = 42,1,null) ) as cancelCnt";
+        $col .= ", sum( if(od_stt = 2 or od_stt = 3 or od_stt = 4 or od_stt = 5 ,od_amount,0)) as orderAmount ";
+        $row1 =  $this->order->get($col,$search);
+
+        $search = array();
+        $search["mb_reg_dt_then_ge"] = $date;
+        $row2 =  $this->member->get(" count(mb_id) as memberCnt ",$search);
+        $this->list = array_merge($row1,$row2);      
+
+    }
+}
+?>

@@ -1,0 +1,46 @@
+<section class="contents">
+    <h1 class="cont_title"> <?=$this->tabPageInfo['name']?> </h1>
+    <div class="cont_wrap">
+    <p>
+    const CLIENT_ID = '502063482585-2jlslcbs9de1f0e8cvb3e9trlmmnfjul.apps.googleusercontent.com';
+const API_KEY = 'AIzaSyCBE4nXqFOEsIreW9GeyxlH9dEriafLhdU';
+</p>
+
+    <p>Sheets API Quickstart</p>
+
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
+    <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
+<script type="text/javascript">
+function gisLoaded(){
+const doc = new GoogleSpreadsheet(
+    "스프레드시트 ID"
+);
+
+doc.useServiceAccountAuth({
+client_email: "서비스 어카운트 이메일",
+    private_key: publicRuntimeConfig.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY,
+}).then((res)=>{
+console.log(res)
+});
+}
+
+//await doc.loadInfo();
+//const sheet = doc.sheetsByIndex[0];
+
+//await sheet.addRow(data, { insert: true });
+
+
+</script>
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+
+
+
+    <button type="button" onclick='printFile("1eo2WSB8tOERR_xirStEfrCgs65jmzXFKGZq1Gat4Zz4")'>test</button>
+    </div>
+    </section>

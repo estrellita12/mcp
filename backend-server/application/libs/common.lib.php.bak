@@ -1,0 +1,498 @@
+<?php
+
+function console($str){
+    echo "<script>console.log('{$str}');</script>";
+}
+
+//console.log (json)
+function console_log($str){
+    echo "<script>console.log(" . json_encode($str) . ");</script>";
+}
+
+//alert
+function alert($str){
+    echo "<script>alert('{$str}');</script>";
+}
+
+//confirm
+function confirm($str){
+    $res = "<script>document.write( confirm('{$str}') );</script>";
+    return $res;
+}
+
+//move
+function move($str = false){
+    echo "<script>";
+    if($str=="close"){
+        echo "opener.parent.location.reload();window.close()";
+    }else{
+        echo $str ? "document.location.replace('{$str}');" : "history.back();";
+    }
+    echo "</script>";
+}
+
+//access
+function access($msg, $url = false){
+    alert($msg);
+    move($url);
+    exit;
+}
+
+// 세션변수 생성
+function set_session($session_name, $value)
+{
+    $_SESSION["$session_name"] = $value;
+}
+
+function chk_empty($value){
+    if( isset($value) && !empty($value) ) return true;
+    else return false;
+}
+function get_data($value, $front='', $back=''){
+    if( !empty($value) ) return $front.$value.$back;
+    else return '';
+}
+
+function get_img( $img , $w='auto', $h='' ){
+    if( is_file(_ROOT.$img) ){
+        return "<img src='".$img."' width=".$w." >";
+    }else{
+        return "<img src='https://killdeal.co.kr/img/noimage.gif' width=50px >";
+    }
+}
+
+function get_dir_list($dirname){
+    $result_array = array();
+    $handle = opendir($dirname);
+    while ($file = readdir($handle)) {
+        if($file == '.'||$file == '..') continue;
+        if (is_dir($dirname.$file)) $result_array[$file] = $file;
+    }
+    closedir($handle);
+    sort($result_array);
+    return $result_array;
+}
+
+// URL 전달을 위하여 REQUEST 값으로 만드는 문자열 쿼리문
+function get_qstr($exc=""){
+    $exc = explode(",",$exc);
+    $url = "";
+    $i=0;
+    foreach($_REQUEST as $key=>$value){
+        if( in_array($key, $exc )) continue;
+        if( $key=='url') continue;
+        if( !empty($value) ){
+            if($i!=0){
+                $url.= "&";
+            }
+            if(is_array($value)){
+                foreach($value as $v){
+                    $url.= $key.urlencode("[]")."=".urlencode(trim($v))."&";
+                }
+            }else{
+                $url.= $key."=".urlencode(trim($value));
+            }
+        }
+        $i++;
+    }
+    return $url;
+}
+
+// 페이징 URL을 위한 함수
+function get_query($exc=""){
+    return  _SCRIPT_URI."?".get_qstr($exc);
+}
+/*
+function get_col($arr){
+    $col = "";
+    foreach($arr as $k => $v){
+        if(!empty($col)) $col .= " , ";
+        $col .= $v." as ".$k;
+    }
+    return $col;
+}
+*/
+function get_sort_tag( $col="idx", $element='' ){
+    $preCol =  isset($_REQUEST['col'])?$_REQUEST['col']:"";
+    $colby =  isset($_REQUEST['colby'])?$_REQUEST['colby']:"";
+    $url = "";
+    if($colby=="desc" || $colby=="")  $url = get_query("col,colby")."&col=".$col."&colby=asc";
+    if($colby=="asc")  $url = get_query("col,colby")."&col=".$col."&colby=desc";
+    $class = $col==$preCol?$colby:"";
+    $str = "<th scope=\"col\" class='sort ".$class."'><a href='#' onclick='reloadArea(\"$url\")' >";
+    $str .= $element;
+    $str .= "</a></th>";
+    return $str;
+}
+/*
+function str_paging_bak($cnt, $curpage, $totalpage, $url, $add=""){
+    if($totalpage < 2) return "";
+    $ss =  (((int)(($curpage - 1 ) / $cnt)) * $cnt) + 1;
+    $se = $ss + $cnt - 1;
+    if($se >= $totalpage) $se = $totalpage;
+
+    $str = "<div class='pg_wrap'>";
+    $str .= "<span class='pg'>";
+
+    if($curpage==1) $str .= "<span class='img_btn pg_start'>처음</span>";
+    else $str .= "<a href='{$url}&page=1' class='img_btn pg_start'>처음</a>";
+
+    if($ss<=1) $str .= "<span class='img_btn pg_prev'>이전</span>";
+    else $str .= "<a href='{$url}&page=".($ss-1)."' class='img_btn pg_prev'>이전</a>";
+
+    for($i=$ss;$i<=$se;$i++){
+        if($i == $curpage){
+            $str .= '<span class="sound_only">열린</span><span class="pg_current">'.$i.'</span><span class="sound_only">페이지</span>';
+        }else{
+            $str .= "<a href='{$url}&page={$i}' class='pg_btn'  >".$i."<span class='sound_only'>페이지</span></a>";
+        }
+    }
+
+    if($totalpage<=$se) $str .= "<span class='img_btn pg_next'>다음</span>";
+    else $str .= "<a href='{$url}&page=".($se+1)."' class='img_btn pg_next'>맨 끝</a>";
+
+    if($curpage==$totalpage) $str .= "<span class='img_btn pg_end'>맨 끝</span>";
+    else $str .= "<a href='{$url}&page=".($totalpage)."' class='img_btn pg_end'>맨 끝</a>";
+
+    $str .= "</span>";
+    $str .= "</div>";
+    return $str;
+}
+*/
+function str_paging($cnt, $curpage, $totalpage, $url, $add=""){
+    if($totalpage < 2) return "";
+    $ss =  (((int)(($curpage - 1 ) / $cnt)) * $cnt) + 1;
+    $se = $ss + $cnt - 1;
+    if($se >= $totalpage) $se = $totalpage;
+
+    $str = "<div class='pg_wrap'>";
+    $str .= "<span class='pg'>";
+
+    if($curpage==1) $str .= "<span class='img_btn pg_start'>처음</span>";
+    else $str .= "<a href='#' onclick='reloadArea(\"$url&page=1\")' class='img_btn pg_start'>처음</a>";
+
+    if($ss<=1) $str .= "<span class='img_btn pg_prev'>이전</span>";
+    else $str .= "<a href='#' onclick='reloadArea(\"$url&page=".($ss-1)."\")' class='img_btn pg_prev'>이전</a>";
+
+    for($i=$ss;$i<=$se;$i++){
+        if($i == $curpage){
+            $str .= '<span class="sound_only">열린</span><span class="pg_current">'.$i.'</span><span class="sound_only">페이지</span>';
+        }else{
+            $str .= "<a href='#' onclick='reloadArea(\"{$url}&page={$i}\")' class='pg_btn'  >".$i."<span class='sound_only'>페이지</span></a>";
+        }
+    }
+
+    if($totalpage<=$se) $str .= "<span class='img_btn pg_next'>다음</span>";
+    else $str .= "<a href='#' onclick='reloadArea(\"{$url}&page=".($se+1)."\")' class='img_btn pg_next'>맨 끝</a>";
+
+    if($curpage==$totalpage) $str .= "<span class='img_btn pg_end'>맨 끝</span>";
+    else $str .= "<a href='#' onclick='reloadArea(\"{$url}&page=".($totalpage)."\")' class='img_btn pg_end'>맨 끝</a>";
+
+    $str .= "</span>";
+    $str .= "</div>";
+    return $str;
+}
+
+function get_frm_radio($name,$value,$selected,$text=''){
+    if(!$text) $text = $value;
+    if($value == $selected)
+        return "<label><input type=\"radio\" name=\"$name\" value=\"$value\" checked > $text</label>";
+    else
+        return "<label><input type=\"radio\" name=\"$name\" value=\"$value\"> $text</label>";
+}
+
+function get_frm_chkbox($name,$value,$selected,$text,$type='toggle'){
+    $chk = "";
+    if( $value==$selected ) $chk = "checked";
+    if($type=='toggle'){
+        $str = "<input type=\"hidden\"  name=\"$name\" id=\"$name\" value=\"$selected\">";
+        $str .= "<label for=\"{$name}Chk\">";
+        $str .= "<input type=\"checkbox\" name=\"{$name}Chk\" id=\"{$name}Chk\" value=\"$value\" onclick=\"chkData('$name')\" $chk>$text</label>";
+    }else{
+        $str = "<label for=\"{$name}\"><input type=\"checkbox\" name=\"{$name}\" id=\"{$name}\" value=\"$value\" $chk>$text</label>";
+    }
+    return $str;
+}
+
+function get_checked($field, $value){
+    if( is_array($value) ){
+        return in_array($field,$value)? ' checked="checked"' : '';
+    }else{
+        return ($field==$value) ? ' checked="checked"' : '';
+    }
+}
+
+function get_selected($field, $value){
+    return ($field==$value) ? ' selected="selected"' : '';
+}
+
+function get_frm_option($value, $selected, $text=''){
+    if(!$text) $text = $value;
+    if($value == $selected)
+        return "<option value=\"$value\" selected=\"selected\">$text</option>\n";
+    else
+        return "<option value=\"$value\">$text</option>\n";
+}
+
+function get_frm_rpp($selected){
+    $str = "";
+    $str .= get_frm_option('10', $selected, '10줄 정렬'); 
+    $str .= get_frm_option('30', $selected, '30줄 정렬'); 
+    $str .= get_frm_option('50', $selected, '50줄 정렬'); 
+    $str .= get_frm_option('100', $selected, '100줄 정렬'); 
+    return $str;
+}
+
+// 눈 모양 이미지
+function img_visible($data, $check, $width="16"){
+    if($data == $check){
+        return "<img src="._ICON."visible.png width={$width}>";
+    }else{
+        return "<img src="._ICON."invisible.png width={$width}>";
+    }
+}
+
+// 성공 여부
+function img_success($data, $check, $width="16"){
+    if($data == $check){
+        return "<img src="._ICON."success.png width={$width}>";
+    }else{
+        return "<img src="._ICON."fail.png width={$width}>";
+    }
+}
+
+// 답변 여부
+function img_yn($data, $check, $width="16"){
+    if($data == $check){
+        return "<img src="._ICON."yes.png width={$width}>";
+    }else{
+        return "<img src="._ICON."no.png width={$width}>";
+    }
+}
+
+function img_rating($num){
+    $str = "<img src='"._ICON."/rating_".$num.".png'>";
+    return $str;
+}
+
+// 상품 이미지 
+function img_goods( $img , $w='15px', $h='' ){
+    if( is_file(_ROOT.$img) ){
+        return "<img src='".$img."' width=".$w." >";
+    }else{
+        return "<img src='https://killdeal.co.kr/img/noimage.gif' width=".$w." >";
+    }
+}
+
+// 날짜검색
+function get_search_date($fr_date, $to_date, $fr_val, $to_val, $is_last=true){
+    $input_end = ' class="frm_input w80" maxlength="10">'.PHP_EOL;
+    $js = " onclick=\"searchDate('{$fr_date}','{$to_date}',this.value);\"";
+
+    $frm = array();
+    $frm[] = '<label for="'.$fr_date.'" class="sound_only">시작일</label>'.PHP_EOL;
+    $frm[] = '<input type="date" name="'.$fr_date.'" value="'.$fr_val.'" id="'.$fr_date.'" size="6">';
+    $frm[] = '<label for="'.$to_date.'" class="sound_only">종료일</label>'.PHP_EOL;
+    $frm[] = '<input type="date" name="'.$to_date.'" value="'.$to_val.'" id="'.$to_date.'" size="6">';
+    $frm[] = '<span class="btn_group">';
+    $frm[] = '<input type="button"'.$js.' class="btn_small btn_white" value="오늘">';
+    $frm[] = '<input type="button"'.$js.' class="btn_small btn_white" value="일주일">';
+    $frm[] = '<input type="button"'.$js.' class="btn_small btn_white" value="지난달">';
+    $frm[] = '<input type="button"'.$js.' class="btn_small btn_white" value="이번달">';
+    if($is_last) $frm[] = '<input type="button"'.$js.' class="btn_small btn_white" value="전체">';
+    $frm[] = '</span>';
+
+    return implode('', $frm);
+}
+
+function check_time( $t ){
+    $time = date('Y-m-d', strtotime($t));
+    $stamp = date('Y-m-d', strtotime('1990-01-01 00:00:00'));
+    $future = date('Y-m-d', strtotime('2200-01-01 00:00:00'));
+    if( $time<=$stamp || $time>=$future ) return false;
+    else return true;
+}
+
+function get_frm_date($name, $value){
+    $str = ""; 
+    $date = ""; $time = ""; $checked = "checked";
+    if( !empty($value) && check_time($value) ){
+        $tmp = explode(" ",$value);
+        $date = $tmp[0]; $time = $tmp[1];
+        $checked = "";
+    }
+    $str .= "<input type=\"date\" name=\"{$name}[]\" value=\"$date\" >\n";
+    $str .= "<input type=\"time\" name=\"{$name}[]\" value=\"$time\" class=\"marl5\" >\n";
+    $str .= "<input type=\"checkbox\" name=\"{$name}\" value=\"inif\" id=\"{$name}\" $checked> <label for=\"{$name}\">무제한</label>";
+    return $str;
+}
+
+function contentReplace($mb,$pt,$content){
+    $content = str_replace("{아이디}",$mb['id'],$content);
+    $content = str_replace("{이름}",$mb['name'],$content);
+    $content = str_replace("{쇼핑몰}",$pt['pt_name'],$content);
+    $content = str_replace("{도메인}","http://".$pt['shop_url'],$content);
+    $content = str_replace("{로고}","http://".$pt['shop_url']._LOGO.$pt['shop_pc_logo'],$content);
+    return $content;
+}
+
+/*
+function editor_html_bak($id, $content, $is_dhtml_editor=true){
+    static $js = true;
+
+    $editor_url = _JS.'plugin/smarteditor2-2.8.2.3';
+
+    $html = "";
+    $html .= "<span class=\"sound_only\">웹에디터 시작</span>";
+    if($is_dhtml_editor && $js) {
+        $html .= "\n".'<script src="'.$editor_url.'/js/HuskyEZCreator.js"></script>';
+        $html .= "\n".'<script>var tw_editor_url = "'.$editor_url.'", oEditors = [];</script>';
+        $html .= "\n".'<script src="'.$editor_url.'/config.js"></script>';
+        $js = false;
+    }
+
+    $smarteditor_class = $is_dhtml_editor ? "smarteditor2" : "";
+    $html .= "\n<textarea id=\"$id\" name=\"$id\" class=\"$smarteditor_class\" maxlength=\"65536\" style=\"width:100%\">$content</textarea>";
+    $html .= "\n<span class=\"sound_only\">웹 에디터 끝</span>";
+    return $html;
+}
+*/
+
+function editor_html($id, $content, $is_dhtml_editor=true){
+    static $js = true;
+
+    $editor_url = _JS.'plugin/editor/smarteditor2';
+
+    $html = "";
+    $html .= "<span class=\"sound_only\">웹에디터 시작</span>";
+    if($is_dhtml_editor && $js) {
+        $html .= "\n".'<script src="'.$editor_url.'/js/HuskyEZCreator.js"></script>';
+        $js = false;
+    }
+
+    $smarteditor_class = $is_dhtml_editor ? "s_editor" : "";
+    $html .= "\n<textarea id=\"$id\" name=\"$id\" class=\"$smarteditor_class\" maxlength=\"65536\" style=\"width:100%\">$content</textarea>";
+    $html .= "\n<span class=\"sound_only\">웹 에디터 끝</span>";
+    return $html;    
+}
+
+
+// TEXT 형식으로 변환
+function get_text($str, $html=0, $restore=false){
+    $source[] = "<";
+    $target[] = "&lt;";
+
+    $source[] = ">";
+    $target[] = "&gt;";
+
+    $source[] = '\"';
+    $target[] = "&#034;";
+
+    $source[] = "\'";
+    $target[] = "&#039;";
+
+    if($restore)
+        $str = str_replace($target, $source, $str);
+
+    if($html) {
+        $source[] = "\n";
+        $target[] = "<br/>";
+    }
+
+    return str_replace($source, $target, $str);
+}
+
+// textarea 로 값을 넘긴다. javascript 반드시 필요
+function get_editor_js($id, $is_dhtml_editor=true){
+    if($is_dhtml_editor) {
+        return "var {$id}_editor_data = oEditors.getById['{$id}'].getIR();\noEditors.getById['{$id}'].exec('UPDATE_CONTENTS_FIELD', []);\nif(jQuery.inArray(document.getElementById('{$id}').value.toLowerCase().replace(/^\s*|\s*$/g, ''), ['&nbsp;','<p>&nbsp;</p>','<p><br></p>','<div><br></div>','<p></p>','<br>','']) != -1){document.getElementById('{$id}').value='';}\n";
+    } else {
+        return "var {$id}_editor = document.getElementById('{$id}');\n";
+    }
+}
+
+// 문자열중 숫자만 추출
+function only_number($str){
+    return preg_replace("/[^0-9]*/s", "", $str);
+}
+
+function get_search(){
+    $search_arr = array();
+    if( !empty($_REQUEST['srch']) ){
+        if(!empty( $_REQUEST['kwd'] )){
+            if( preg_match("/,/",$_REQUEST['kwd']) ){
+                $kwd = str_replace(",","','",$_REQUEST['kwd']);
+                $search_arr[$_REQUEST['srch']] = "in ('{$kwd}')";
+            }else{
+                $search_arr[$_REQUEST['srch']] = "like '%{$_REQUEST['kwd']}%'";
+            }
+        }
+    }
+    return $search_arr;
+}
+
+function debug_log($model,$etype,$e=''){
+    $file = "/var/www/html/backend-server/log/debug_"._DATE_YMD.".txt";
+    $arr['DATE'] = _DATE_YMDHIS;
+    $arr['ModelName'] = $model;
+    $arr['Errortype'] = $GLOBALS['res_code'][$etype];
+    $arr['Exception'] = $e;
+    //ob_start(); var_dump($arr); $content = ob_get_contents(); ob_end_clean();
+    //error_log($content ,3,"/var/www/html/backend-server/log/debug.txt");
+    error_log(print_r($arr,true) ,3, $file);
+}
+
+function password($passwd){
+    return password_hash($passwd,PASSWORD_DEFAULT); 
+}
+
+
+function gs_id($id){
+    $str = "<a href=\"/Goods/modify/".$id."?returnUrl=".urlencode(_REQUEST_URI)."\">".$id."</a>";
+    return $str;
+}
+
+function gs_name($id,$name){
+    $str = "<a href=\"#\">";
+    $str .= $name;
+    $str .= "</a>";
+    return $str;
+}
+
+function mb_id($id='', $name=""){
+    if(empty($id)) return "<span>비회원</span>";
+    $str = "<a href=\"#\" onclick=\"winOpen('/Member/info/".$id."','memberForm','900','600','yes');\" >";
+    $str .= empty($name)?$id:$name;
+    $str .= "</a>";
+    return $str;
+}
+
+function pt_id($id, $name=""){
+    $str = "<a href=\"#\" onclick=\"winOpen('/Partner/info/".$id."','partnerForm','900','600','yes');\" >";
+    $str .= empty($name)?$id:$name;
+    $str .= "</a>";
+    return $str;
+}
+
+function sl_id($id, $name=""){
+    $str = "<a href=\"#\" onclick=\"winOpen('/Seller/info/".$id."','sellerForm','900','600','yes');\" >";
+    $str .= empty($name)?$id:$name;
+    $str .= "</a>";
+    return $str;
+}
+
+function od_id($id){
+    $str = "<a href=\"#\" onclick=\"winOpen('/Order/descPopup/".$id."','orderIdForm','900','600','yes');\" >";
+    $str .= $id;
+    $str .= "</a>";
+    return $str;
+}
+
+function od_no($no){
+    $str = "<a href=\"#\" onclick=\"winOpen('/Order/descListPopup/".$no."','orderNoForm','900','600','yes');\" >";
+    $str .= $no;
+    $str .= "</a>";
+    return $str;
+}
+
+?>

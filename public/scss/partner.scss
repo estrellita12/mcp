@@ -1,0 +1,279 @@
+@charset "utf-8";
+@import "reset.scss";
+
+$para-fs: 13px;
+$sub-tit-fs: 14px;
+$main-tit-fs: 15px;
+$ft-fs: 13px;
+
+$color-light-red: #f7e3e1;
+$color-light-red-hover: #efc8c4;
+$color-red: #e94235;
+$color-red-hover: #cd0c0c;
+
+$color-light-gray: #fcfcfc;
+$color-light-gray-hover: #f7f7f7;
+$color-gray: #eee;
+$color-gray-hover: #ddd;
+
+$color-dark-gray: #787878;
+$color-dark-gray-hover: #555;
+
+$color-light-blue: #f8fbfd;
+$color-light-blue-hover: #c0d8e5;
+$color-blue: #006daa;
+$color-blue-hover: #014164;
+
+$color-light-yellow: #fefcec;
+$color-light-yellow-hover: #fefcec;
+$color-yellow: #f9de05;
+$color-yellow-hover: #fefcec;
+
+$color-black: #333;
+$color-black-hover: #111;
+
+$color-theme: #4046f4;
+$color-theme-hover: #1218bb;
+$color-theme-bg: #fbfafa;
+
+$aside-top: 50px;
+
+@import "basic.scss";
+
+#login_wrap {
+    min-width: 1200px;
+    position: relative;
+    margin-top: 100px;
+    .login_header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        min-width: 1000px;
+        background-color: #f29c9f;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 30px;
+        padding-right: 30px;
+        display: flex;
+        box-sizing: border-box;
+        justify-content: space-between;
+        align-items: flex-end;
+        .logo_box {
+            img {
+                width: 200px;
+            }
+        }
+        ul {
+            display: flex;
+            li {
+                img {
+                    margin-right: 5px;
+                    margin-bottom: 2px;
+                }
+                margin-left: 10px;
+                &:not(:last-child) {
+                    margin-right: 10px;
+                }
+                padding: 6px 12px;
+                font-size: 14px;
+                font-weight: 500;
+                cursor: pointer;
+                color: #333;
+                border-bottom: 3px solid #f29c9f;
+                &:hover {
+                    border-bottom: 3px solid #fadfd8;
+                }
+            }
+        }
+    }
+    #login_inner {
+        display: none;
+        &.active {
+            display: block;
+        }
+        position: fixed;
+        width: 250px;
+        background-color: #fff;
+        border: 1px solid $color-gray;
+        border-radius: 10px;
+        right: 35px;
+        top: 105px;
+        padding: 20px;
+        .title {
+            font-size: 16px;
+            text-align: center;
+            line-height: 20px;
+            height: 30px;
+            font-weight: 600;
+        }
+        input {
+            height: 40px;
+            border-radius: 2px;
+            width: 100%;
+        }
+        input[type="text"],
+        input[type="password"] {
+            margin-top: 5px;
+            padding: 12px 15px;
+            font-size: 13px;
+            background-color: #fbfbfb;
+            border: 1px solid $color-gray;
+        }
+        .btn_theme {
+            background-color: #f29c9f;
+            margin-top: 10px;
+            color: #fff;
+            border: none;
+            &:hover {
+                background-color: #e38b8e;
+            }
+        }
+    }
+
+    .intro {
+        background-image: url(/public/img/partner_intro.gif);
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-color: rgb(250, 223, 216);
+        padding-left: 100px;
+        padding-right: 100px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        height: 700px;
+    }
+
+    .login_wrap {
+        section {
+            box-sizing: border-box;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-top: 50px;
+            padding-bottom: 50px;
+            &.around {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        #cont1 {
+            background-color: rgb(188, 224, 224);
+            text-align: center;
+            p {
+                font-size: 32px;
+                font-weight: 600;
+                line-height: 50px;
+                height: 50px;
+                overflow: hidden;
+            }
+            b {
+                color: rgb(5, 9, 130);
+                font-weight: 700;
+            }
+            mark {
+                font-weight: 600;
+                background-color: #fef49a;
+                width: 350px;
+                display: inline-block;
+                overflow: hidden;
+            }
+            img {
+                width: 800px;
+            }
+            &.active mark {
+                animation-delay: 0.5s;
+                animation-duration: 1s;
+                animation-name: width;
+            }
+        }
+        #cont2 {
+            background-color: rgb(242, 156, 159);
+            padding-top: 60px;
+            padding-bottom: 60px;
+            h1 {
+                font-size: 34px;
+                font-weight: 600;
+                margin-bottom: 25px;
+            }
+            p {
+                font-size: 25px;
+                line-height: 32px;
+                font-weight: 500;
+            }
+            b {
+                color: rgb(254, 247, 153);
+                font-weight: 600;
+            }
+            img {
+                width: 550px;
+            }
+        }
+        #cont3 {
+            background-color: rgb(188, 224, 224);
+            text-align: center;
+            h1 {
+                font-size: 34px;
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+            p {
+                font-size: 21px;
+                line-height: 25px;
+                font-weight: 400;
+                img {
+                    margin-bottom: 5px;
+                    margin-right: 5px;
+                }
+            }
+
+            b {
+                color: rgb(5, 9, 130);
+                font-weight: 700;
+            }
+            .img_wrap {
+                img {
+                    width: 1000px;
+                }
+            }
+        }
+        #cont4 {
+            background-color: rgb(242, 156, 159);
+            p {
+                text-align: center;
+                font-size: 30px;
+                line-height: 40px;
+                font-weight: 600;
+                letter-spacing: 2px;
+            }
+            b {
+                color: rgb(254, 247, 153);
+                font-weight: 600;
+            }
+            img {
+                width: 500px;
+            }
+        }
+    }
+}
+
+/* 키프레임 이름 = 애니메이션 이름 */
+@-webkit-keyframes width {
+    0% {
+        width: 0px;
+    }
+    100% {
+        width: 350px;
+    }
+}
+
+/* 키프레임 이름 = 애니메이션 이름 */
+@-webkit-keyframes backgroundColor {
+    0% {
+        background-color: white;
+    }
+    100% {
+        background-color: none;
+    }
+}

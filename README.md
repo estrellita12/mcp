@@ -1,2 +1,1 @@
-# mcp
-My-Custom-Mall
+# my-custom-platform
